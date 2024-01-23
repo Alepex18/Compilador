@@ -1,0 +1,17 @@
+Fuente 1 (https://www.postecnologia.com/2012/01/clasificacion-de-compiladores.html)
+Una sola pasada: examina el código fuente una vez, generando el código o programa objeto
+Pasadas múltiples: requieren pasos intermedios para producir un código en otro lenguaje, y una pasada final para producir y optimizar el código producido durante los pasos anteriores.
+Optimación: lee un código fuente, lo analiza y descubre errores potenciales sin ejecutar el programa.
+Compiladores incrementales: generan un código objeto instrucción por instrucción (en vez de hacerlo para todo el programa) cuando el usuario teclea cada orden individual. El otro tipo de compiladores requiere que todos los enunciados o instrucciones se compilen conjuntamente.
+Ensamblador: el lenguaje fuente es lenguaje ensamblador y posee una estructura sencilla.
+Compilador cruzado: se genera código en lenguaje objeto para una máquina diferente de la que se está utilizando para compilar. Es perfectamente normal construir un compilador de Pascal que genere código para MS-DOS y que el compilador funcione en Linux y se haya escrito en C++.
+Compilador con montador: compilador que compila distintos módulos de forma independiente y después es capaz de enlazarlos.
+Autocompilador: compilador que está escrito en el mismo lenguaje que va a compilar. Evidentemente, no se puede ejecutar la primera vez. Sirve para hacer ampliaciones al lenguaje, mejorar el código generado, etc.
+Metacompilador: es sinónimo de compilador de compiladores y se refiere a un programa que recibe como entrada las especificaciones del lenguaje para el que se desea obtener un compilador y genera como salida el compilador para ese lenguaje. El desarrollo de los metacompiladores se encuentra con la dificultad de unir la generación de código con la parte de análisis.
+Descompilador: es un programa que acepta como entrada código máquina y lo traduce a un lenguaje de alto nivel, realizando el proceso inverso a la compilación.
+Fuente 2 (https://es.wikipedia.org/wiki/Compilador)
+Compiladores cruzados: generan código para una plataforma distinta a aquella en la que están funcionando.
+Compiladores optimizadores: realizan cambios en el código para mejorar su eficiencia, pero manteniendo la funcionalidad del programa original.
+Compiladores de una sola pasada: generan el código máquina a partir de una única lectura del código fuente.
+Compiladores de varias pasadas: necesitan leer el código fuente varias veces antes de poder producir el código máquina.
+Compiladores JIT (just in time): forman parte de un intérprete y compilan partes del código según se necesitan.
