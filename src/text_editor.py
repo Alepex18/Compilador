@@ -3,7 +3,9 @@ import PySimpleGUI as sg
 sg.theme('DarkPurple7')  
 
 def ltab(i=0):
-   return [[sg.Multiline(default_text='',disabled=False, size=(800,33.5),key=f'-multline{i}-')]]
+   window = sg.Window('Test', [[]])
+   width,height, = window.get_screen_dimensions()
+   return [[sg.Multiline(default_text='',disabled=False, size=(width,height),key=f'-multline{i}-')]]
 def main_window():
     tabgl = [[sg.Tab('New File',ltab(),key='0')]]
     tabg = sg.TabGroup(tabgl,key='-tabs-')
