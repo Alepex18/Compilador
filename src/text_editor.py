@@ -2,17 +2,18 @@ import PySimpleGUI as sg
 
 sg.theme('DarkPurple7')  
 
-def ltab(i=0):
+def ltab(i=0,mdata=None):
    window = sg.Window('Test', [[]])
    width,height, = window.get_screen_dimensions()
-   return [[sg.Multiline(default_text='',disabled=False, size=(width,height),key=f'-multline{i}-')]]
+   return [[sg.Multiline(default_text='',disabled=False, size=(width,height),key=f'-multline{i}-', metadata=mdata)]]
+
 def main_window():
     tabgl = [[sg.Tab('New File',ltab(),key='0')]]
     tabg = sg.TabGroup(tabgl,key='-tabs-')
     layout = [[sg.Menu([['File', ['New File','Open','Close']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)],
             [tabg]]
     i = 1
-    
+    files_opened = []
     # Create the Window
     window = sg.Window('Test', layout,resizable=True)
     
@@ -34,12 +35,23 @@ def main_window():
                 tabname = ntpath.basename(filename)
                 with open(filename,'r') as file:
                     text = file.read()
-                
+                print(files_opened)    
+                if tabname not in files_opened:
+                    files_opened.append(tabname)
+                    
+                    tabg.add_tab(sg.Tab(f'New File {i}',ltab(i,tabname),key=i))
+                    window[i].select()
+                    i += 1
+                    window.finalize
 
-                ctab = window['-tabs-'].get()
-                print(ctab)
-                window[ctab].update(title=tabname)
-                window[f'-multline{ctab}-'].update(text)
+                    ctab = window['-tabs-'].get()
+                    print(ctab)
+                    window[ctab].update(title=tabname)
+                    window[f'-multline{ctab}-'].update(text)
+                    
+                else:
+                    sg.popup_ok(f"El archivo {tabname} ya esta abierto")
+                
         if event == 'Close': # if user clicks Close
             # Code to actually delete the tab (isn't working well)
             
@@ -55,7 +67,13 @@ def main_window():
             window.refresh """
             
             # Code that makes the current tab invisible
+            ctab = window['-tabs-'].get() 
+            file_to_close = window[f'-multline{ctab}-'].metadata
+            if file_to_close in files_opened:
+                files_opened.remove(file_to_close)
+                
             window[values['-tabs-']].update('',visible=False)
+            
     window.close()
 
 main_window()
