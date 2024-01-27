@@ -10,7 +10,7 @@ def ltab(i=0,mdata=None):
 def main_window():
     tabgl = [[sg.Tab('New File',ltab(),key='0')]]
     tabg = sg.TabGroup(tabgl,key='-tabs-')
-    layout = [[sg.Menu([['File', ['New File','Open','Close']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)],
+    layout = [[sg.Menu([['File', ['New File','Open','Save','Close']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)],
             [tabg]]
     i = 1
     files_opened = []
@@ -37,9 +37,9 @@ def main_window():
                     text = file.read()
                 print(files_opened)    
                 if tabname not in files_opened:
-                    files_opened.append(tabname)
+                    files_opened.append(filename)
                     
-                    tabg.add_tab(sg.Tab(f'New File {i}',ltab(i,tabname),key=i))
+                    tabg.add_tab(sg.Tab(f'New File {i}',ltab(i,filename),key=i))
                     window[i].select()
                     i += 1
                     window.finalize
@@ -51,7 +51,14 @@ def main_window():
                     
                 else:
                     sg.popup_ok(f"El archivo {tabname} ya esta abierto")
-                
+        if event == 'Save':
+            ctab = window['-tabs-'].get() 
+            file_to_save = window[f'-multline{ctab}-'].metadata   
+            
+            if file_to_save is not None:
+                print(file_to_save)
+                with open(file_to_save,'w') as file:
+                    file.write(values[f'-multline{ctab}-'])     
         if event == 'Close': # if user clicks Close
             # Code to actually delete the tab (isn't working well)
             
