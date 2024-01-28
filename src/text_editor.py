@@ -1,19 +1,71 @@
 import PySimpleGUI as sg
+import ntpath
 
 sg.theme('DarkPurple7')  
+files_opened = []
 
 def ltab(i=0,mdata=None):
    window = sg.Window('Test', [[]])
    width,height, = window.get_screen_dimensions()
-   return [[sg.Multiline(default_text='',disabled=False, size=(width,height),key=f'-multline{i}-', metadata=mdata)]]
+   return [[sg.Multiline(default_text='',disabled=False, 
+                         size=(width,height),key=f'-multline{i}-', 
+                         metadata=mdata)]]
 
+def open_file(window,j,filename=None):
+    if filename is None:
+        filename = sg.popup_get_file('file to open', no_window=True)
+    if filename !='':
+        
+        tabname = ntpath.basename(filename)
+        with open(filename,'r') as file:
+            text = file.read()
+        print(files_opened)    
+        if filename not in files_opened:
+            files_opened.append(filename)
+            
+            window['-tabs-'].add_tab(sg.Tab(tabname,ltab(f'{tabname}{j}',filename),key=f'{tabname}{j}'))
+            window[f'{tabname}{j}'].select()
+            window.finalize
+
+            ctab = window['-tabs-'].get()
+            print(f'current tab {ctab}')
+            window[f'-multline{ctab}-'].update(text)
+            
+        else:
+            sg.popup_ok(f"El archivo {tabname} ya esta abierto")
+            
+def save_as(window,values):
+    ctab = window['-tabs-'].get() 
+    try: # 'OUT OF INDEX' error in Trinket if 'CANCEL' button is clicked
+        filename = sg.popup_get_file('Save File', save_as=True, no_window=True)
+    except:
+        return
+    if filename not in (None,''):
+        if not filename.endswith('.txt'):
+            filename += '.txt'
+        
+        with open(filename,'w') as f:
+            f.write(values[f'-multline{ctab}-'])
+        close_file(window,values)
+        open_file(window,values,filename)
+        
+
+def close_file (window,values):
+    # Code that makes the current tab invisible
+        ctab = window['-tabs-'].get() 
+        file_to_close = window[f'-multline{ctab}-'].metadata
+        if file_to_close in files_opened:
+            files_opened.remove(file_to_close)
+        window[values['-tabs-']].update('',visible=False)
+    
+    
 def main_window():
     tabgl = [[sg.Tab('New File',ltab(),key='0')]]
     tabg = sg.TabGroup(tabgl,key='-tabs-')
-    layout = [[sg.Menu([['File', ['New File','Open','Save','Close']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)],
+    layout = [[sg.Menu([['File', ['New File','Open','Save','Save As','Close']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)],
             [tabg]]
     i = 1
-    files_opened = []
+    j = 0
     # Create the Window
     window = sg.Window('Test', layout,resizable=True)
     
@@ -28,37 +80,20 @@ def main_window():
             i += 1
             window.finalize
         if event == 'Open': # if user clicks Open
-            filename = sg.popup_get_file('file to open', no_window=True)
-            print(filename)
-            if filename !='':
-                import ntpath
-                tabname = ntpath.basename(filename)
-                with open(filename,'r') as file:
-                    text = file.read()
-                print(files_opened)    
-                if tabname not in files_opened:
-                    files_opened.append(filename)
-                    
-                    tabg.add_tab(sg.Tab(f'New File {i}',ltab(i,filename),key=i))
-                    window[i].select()
-                    i += 1
-                    window.finalize
-
-                    ctab = window['-tabs-'].get()
-                    print(ctab)
-                    window[ctab].update(title=tabname)
-                    window[f'-multline{ctab}-'].update(text)
-                    
-                else:
-                    sg.popup_ok(f"El archivo {tabname} ya esta abierto")
-        if event == 'Save':
+            open_file(window,j)
+            j +=1
+        if event == 'Save': # if user clicks Save
             ctab = window['-tabs-'].get() 
             file_to_save = window[f'-multline{ctab}-'].metadata   
             
             if file_to_save is not None:
                 print(file_to_save)
                 with open(file_to_save,'w') as file:
-                    file.write(values[f'-multline{ctab}-'])     
+                    file.write(values[f'-multline{ctab}-'])
+            else:
+                save_as(window,values) 
+        if event == 'Save As': # if user clicks Save
+            save_as(window,values) 
         if event == 'Close': # if user clicks Close
             # Code to actually delete the tab (isn't working well)
             
@@ -72,14 +107,7 @@ def main_window():
             #Update the TabCount(part of the structure of TabGroups)
             window["-tabs-"].TabCount -= 1
             window.refresh """
-            
-            # Code that makes the current tab invisible
-            ctab = window['-tabs-'].get() 
-            file_to_close = window[f'-multline{ctab}-'].metadata
-            if file_to_close in files_opened:
-                files_opened.remove(file_to_close)
-                
-            window[values['-tabs-']].update('',visible=False)
+            close_file(window,values)
             
     window.close()
 
