@@ -62,7 +62,7 @@ def close_file (window,values):
 def main_window():
     tabgl = [[sg.Tab('New File',ltab(),key='0')]]
     tabg = sg.TabGroup(tabgl,key='-tabs-')
-    layout = [[sg.Menu([['File', ['New File','Open','Save','Save As','Close']], ['Edit', ['Edit Me', ]]],  k='-CUST MENUBAR-',p=0)],
+    layout = [[sg.Menu([['File', ['New File','Open','Save','Save As','---','Close']]],  k='-CUST MENUBAR-',p=0)],
             [tabg]]
     i = 1
     j = 0
