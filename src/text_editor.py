@@ -62,7 +62,7 @@ def close_file (window,values):
 def main_window():
     tabgl = [[sg.Tab('New File',ltab(),key='0')]]
     tabg = sg.TabGroup(tabgl,key='-tabs-')
-    layout = [[sg.Menu([['File', ['New File','Open','Save','Save As','---','Close']]],  k='-CUST MENUBAR-',p=0)],
+    layout = [[sg.Menu([['File', ['New File','Open','Save','Save As','---','Close']],['Analisis',['Lexic']]],  k='-CUST MENUBAR-',p=0)],
             [tabg]]
     i = 1
     j = 0
@@ -108,7 +108,15 @@ def main_window():
             window["-tabs-"].TabCount -= 1
             window.refresh """
             close_file(window,values)
-            
+        if event == 'Lexic':
+            ctab = window['-tabs-'].get()
+            if ctab is not None:
+                text_to_analyse = values[f'-multline{ctab}-']
+                from utils.get_characters import get_characters
+                lexic_analised_text = get_characters(text_to_analyse)
+                sg.Print(f"Numeros:\nCantidad: {lexic_analised_text['numbers']['count']}\nLista: {lexic_analised_text['numbers']['list']}")
+                sg.Print(f"Letras:\nCantidad: {lexic_analised_text['letters']['count']}\nLista: {lexic_analised_text['letters']['list']}")
+                sg.Print(f"Caracteres Especiales:\nCantidad: {lexic_analised_text['special_characters']['count']}\nLista: {lexic_analised_text['special_characters']['list']}")
     window.close()
 
 main_window()
