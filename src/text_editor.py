@@ -113,6 +113,7 @@ def main_window():
         if event == 'Lexic':
             ctab = window['-tabs-'].get()
             if ctab is not None:
+                sg.easy_print_close()
                 text_to_analyse = values[f'-multline{ctab}-']
                 from utils.get_characters import get_characters
                 lexic_analised_text = get_characters(text_to_analyse)
