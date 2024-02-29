@@ -35,19 +35,20 @@ def open_file(window,j,filename=None):
             sg.popup_ok(f"El archivo {tabname} ya esta abierto")
             
 def save_as(window,values):
-    ctab = window['-tabs-'].get() 
-    try: # 'OUT OF INDEX' error in Trinket if 'CANCEL' button is clicked
-        filename = sg.popup_get_file('Save File', save_as=True, no_window=True)
-    except:
-        return
-    if filename not in (None,''):
-        if not filename.endswith('.txt'):
-            filename += '.txt'
-        
-        with open(filename,'w') as f:
-            f.write(values[f'-multline{ctab}-'])
-        close_file(window,values)
-        open_file(window,values,filename)
+    ctab = window['-tabs-'].get()
+    if ctab is not None:
+        try: # 'OUT OF INDEX' error in Trinket if 'CANCEL' button is clicked
+            filename = sg.popup_get_file('Save File', save_as=True, no_window=True)
+        except:
+            return
+        if filename not in (None,''):
+            if not filename.endswith('.txt'):
+                filename += '.txt'
+            
+            with open(filename,'w') as f:
+                f.write(values[f'-multline{ctab}-'])
+            close_file(window,values)
+            open_file(window,values,filename)
         
 
 def close_file (window,values):
@@ -83,15 +84,16 @@ def main_window():
             open_file(window,j)
             j +=1
         if event == 'Save': # if user clicks Save
-            ctab = window['-tabs-'].get() 
-            file_to_save = window[f'-multline{ctab}-'].metadata   
-            
-            if file_to_save is not None:
-                print(file_to_save)
-                with open(file_to_save,'w') as file:
-                    file.write(values[f'-multline{ctab}-'])
-            else:
-                save_as(window,values) 
+            ctab = window['-tabs-'].get()
+            if ctab is not None: 
+                file_to_save = window[f'-multline{ctab}-'].metadata   
+                
+                if file_to_save is not None:
+                    print(file_to_save)
+                    with open(file_to_save,'w') as file:
+                        file.write(values[f'-multline{ctab}-'])
+                else:
+                    save_as(window,values) 
         if event == 'Save As': # if user clicks Save
             save_as(window,values) 
         if event == 'Close': # if user clicks Close
