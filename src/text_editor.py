@@ -117,9 +117,10 @@ def main_window():
                 text_to_analyse = values[f'-multline{ctab}-']
                 from utils.get_characters import get_characters
                 lexic_analised_text = get_characters(text_to_analyse)
-                sg.Print(f"Numeros:\nCantidad: {lexic_analised_text['numbers']['count']}\nLista: {lexic_analised_text['numbers']['list']}")
-                sg.Print(f"Letras:\nCantidad: {lexic_analised_text['letters']['count']}\nLista: {lexic_analised_text['letters']['list']}")
-                sg.Print(f"Caracteres Especiales:\nCantidad: {lexic_analised_text['special_characters']['count']}\nLista: {lexic_analised_text['special_characters']['list']}")
+                string_numeros = f"Numeros:\nCantidad: {lexic_analised_text['numbers']['count']}\nLista: {lexic_analised_text['numbers']['list']}\n\n"
+                string_letras = f"Letras:\nCantidad: {lexic_analised_text['letters']['count']}\nLista: {lexic_analised_text['letters']['list']}\n\n"
+                string_caracteres_especiales = f"Caracteres Especiales:\nCantidad: {lexic_analised_text['special_characters']['count']}\nLista: {lexic_analised_text['special_characters']['list']}\n"       
+                sg.Print(string_numeros+string_letras+string_caracteres_especiales)   
     window.close()
 
 main_window()
