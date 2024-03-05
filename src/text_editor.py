@@ -10,7 +10,39 @@ def ltab(i=0,mdata=None):
    return [[sg.Multiline(default_text='',disabled=False, 
                          size=(width,height),key=f'-multline{i}-', 
                          metadata=mdata)]]
+   
+def lexictablayout():
+   return [[sg.Text('Numeros: ',key='-numbers-')],
+           [sg.Multiline(default_text='',disabled=True,key='-numberslist-',expand_y=True, expand_x=True)],
+           [sg.Text('Letras: ',key='-letters-')],
+           [sg.Multiline(default_text='',disabled=True,key='-letterslist-',expand_y=True, expand_x=True)],
+           [sg.Text('Caracteres Especiales: ',key='-specialc-')],
+           [sg.Multiline(default_text='',disabled=True,key='-specialclist-',expand_y=True, expand_x=True)]]
 
+def lexictab(window,values,ctab):
+    if ctab is not None:
+        text_to_analyse = values[f'-multline{ctab}-']
+        from utils.get_characters import get_characters
+        lexic_analised_text = get_characters(text_to_analyse)
+        window['-numbers-'].update(f'Numeros: {lexic_analised_text['numbers']['count']}')
+        window['-numberslist-'].update(', '.join(lexic_analised_text['numbers']['list']))
+        window['-letters-'].update(f'Letras: {lexic_analised_text['letters']['count']}')
+        window['-letterslist-'].update(', '.join(lexic_analised_text['letters']['list']))
+        window['-specialc-'].update(f'Carácteres Especiales: {lexic_analised_text['special_characters']['count']}')
+        window['-specialclist-'].update(', '.join(lexic_analised_text['special_characters']['list']))
+        window['-lexic-'].select()
+
+def lexicwindow(values,ctab):
+    if ctab is not None:
+        sg.easy_print_close()
+        text_to_analyse = values[f'-multline{ctab}-']
+        from utils.get_characters import get_characters
+        lexic_analised_text = get_characters(text_to_analyse)
+        string_numeros = f"Numeros:\nCantidad: {lexic_analised_text['numbers']['count']}\nLista: {lexic_analised_text['numbers']['list']}\n\n"
+        string_letras = f"Letras:\nCantidad: {lexic_analised_text['letters']['count']}\nLista: {lexic_analised_text['letters']['list']}\n\n"
+        string_caracteres_especiales = f"Carácteres Especiales:\nCantidad: {lexic_analised_text['special_characters']['count']}\nLista: {lexic_analised_text['special_characters']['list']}\n"       
+        sg.Print(string_numeros+string_letras+string_caracteres_especiales) 
+        
 def open_file(window,j,filename=None):
     if filename is None:
         filename = sg.popup_get_file('file to open', no_window=True)
@@ -30,6 +62,7 @@ def open_file(window,j,filename=None):
             ctab = window['-tabs-'].get()
             print(f'current tab {ctab}')
             window[f'-multline{ctab}-'].update(text)
+            window[f'-texteditor-'].select()
             
         else:
             sg.popup_ok(f"El archivo {tabname} ya esta abierto")
@@ -61,10 +94,14 @@ def close_file (window,values):
     
     
 def main_window():
+    use_lexic_tab = True #Change to false to use a window for lexic analisis display
     tabgl = [[sg.Tab('New File',ltab(),key='0')]]
     tabg = sg.TabGroup(tabgl,key='-tabs-')
-    layout = [[sg.Menu([['File', ['New File','Open','Save','Save As','---','Close']],['Analisis',['Lexic']]],  k='-CUST MENUBAR-',p=0)],
-            [tabg]]
+    tabggl = [[sg.Tab('Text Editor',[[tabg if use_lexic_tab else sg.Text('')]],key='-texteditor-')],
+              [sg.Tab('Lexic Analisis',lexictablayout(),key='-lexic-')]]
+    tabgg = sg.TabGroup(tabggl,key='-tabgroup-')
+    layout = [[sg.Menu([['File', ['New File','Open','Save','Save As','---','Close','why']],['Analisis',['Lexic']]],  k='-CUST MENUBAR-',p=0)],
+            [tabgg if use_lexic_tab else tabg]]
     i = 1
     j = 0
     # Create the Window
@@ -112,15 +149,13 @@ def main_window():
             close_file(window,values)
         if event == 'Lexic':
             ctab = window['-tabs-'].get()
-            if ctab is not None:
-                sg.easy_print_close()
-                text_to_analyse = values[f'-multline{ctab}-']
-                from utils.get_characters import get_characters
-                lexic_analised_text = get_characters(text_to_analyse)
-                string_numeros = f"Numeros:\nCantidad: {lexic_analised_text['numbers']['count']}\nLista: {lexic_analised_text['numbers']['list']}\n\n"
-                string_letras = f"Letras:\nCantidad: {lexic_analised_text['letters']['count']}\nLista: {lexic_analised_text['letters']['list']}\n\n"
-                string_caracteres_especiales = f"Caracteres Especiales:\nCantidad: {lexic_analised_text['special_characters']['count']}\nLista: {lexic_analised_text['special_characters']['list']}\n"       
-                sg.Print(string_numeros+string_letras+string_caracteres_especiales)   
+            if use_lexic_tab:
+                lexictab(window,values,ctab)
+            else:
+                lexicwindow(values,ctab)
+        if event == 'why':
+            ctab = window['-tabs-'].get()
+            print(ctab)
     window.close()
 
 main_window()
