@@ -100,7 +100,7 @@ def main_window():
     tabggl = [[sg.Tab('Text Editor',[[tabg if use_lexic_tab else sg.Text('')]],key='-texteditor-')],
               [sg.Tab('Lexic Analisis',lexictablayout(),key='-lexic-')]]
     tabgg = sg.TabGroup(tabggl,key='-tabgroup-')
-    layout = [[sg.Menu([['File', ['New File','Open','Save','Save As','---','Close','why']],['Analisis',['Lexic']]],  k='-CUST MENUBAR-',p=0)],
+    layout = [[sg.Menu([['File', ['New File','Open','Save','Save As','---','Close']],['Analisis',['Lexic']]],  k='-CUST MENUBAR-',p=0)],
             [tabgg if use_lexic_tab else tabg]]
     i = 1
     j = 0
@@ -153,9 +153,9 @@ def main_window():
                 lexictab(window,values,ctab)
             else:
                 lexicwindow(values,ctab)
-        if event == 'why':
-            ctab = window['-tabs-'].get()
-            print(ctab)
+        # if event == 'why':
+        #     ctab = window['-tabs-'].get()
+        #     print(ctab)
     window.close()
 
 main_window()
