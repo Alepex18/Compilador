@@ -22,9 +22,9 @@ def lexictablayout():
 def lexictab(window,values,ctab):
     if ctab is not None:
         text_to_analyse = values[f'-multline{ctab}-']
-        from utils.get_characters import get_characters
+        from get_character import get_characters
         lexic_analised_text = get_characters(text_to_analyse)
-        window['-numbers-'].update(f'Numeros: {lexic_analised_text['numbers']['count']}')
+        window['-numbers-'].update(f'Numeros: {lexic_analised_text['numbers']['count']}') 
         window['-numberslist-'].update(', '.join(lexic_analised_text['numbers']['list']))
         window['-letters-'].update(f'Letras: {lexic_analised_text['letters']['count']}')
         window['-letterslist-'].update(', '.join(lexic_analised_text['letters']['list']))
