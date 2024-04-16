@@ -19,6 +19,22 @@ def lexictablayout():
            [sg.Text('Caracteres Especiales: ',key='-specialc-')],
            [sg.Multiline(default_text='',disabled=True,key='-specialclist-',expand_y=True, expand_x=True)]]
 
+def sintaxtablayout():
+   return [[sg.Text('Analisis Sintactico: ',key='-sanalysis-')],
+           [sg.Multiline(default_text='',disabled=True,key='-sintaxanalysis-',expand_y=True, expand_x=True)],
+           [sg.Text('Arbol Sintactico: ',key='-stree-')],
+           [sg.Multiline(default_text='',disabled=True,key='-sintaxtree-',expand_y=True, expand_x=True)],
+   ]
+
+def sintaxtab(window,values,ctab):
+    if ctab is not None:
+        text_to_analyse = values[f'-multline{ctab}-']
+        from sintax import sintax_analisis
+        sintax_analised_text = sintax_analisis(text_to_analyse)
+        window['-sintaxanalysis-'].update(sintax_analised_text[0])
+        window['-sintaxtree-'].update(sintax_analised_text[1])
+        window['-sintax-'].select()
+
 def lexictab(window,values,ctab):
     if ctab is not None:
         text_to_analyse = values[f'-multline{ctab}-']
@@ -98,9 +114,10 @@ def main_window():
     tabgl = [[sg.Tab('New File',ltab(),key='0')]]
     tabg = sg.TabGroup(tabgl,key='-tabs-')
     tabggl = [[sg.Tab('Text Editor',[[tabg if use_lexic_tab else sg.Text('')]],key='-texteditor-')],
-              [sg.Tab('Lexic Analisis',lexictablayout(),key='-lexic-')]]
+              [sg.Tab('Lexic Analisis',lexictablayout(),key='-lexic-')],
+              [sg.Tab('Sintax Analisis',sintaxtablayout(),key='-sintax-')]]
     tabgg = sg.TabGroup(tabggl,key='-tabgroup-')
-    layout = [[sg.Menu([['File', ['New File','Open','Save','Save As','---','Close']],['Analisis',['Lexic']]],  k='-CUST MENUBAR-',p=0)],
+    layout = [[sg.Menu([['File', ['New File','Open','Save','Save As','---','Close']],['Analisis',['Lexic','Sintax']]],  k='-CUST MENUBAR-',p=0)],
             [tabgg if use_lexic_tab else tabg]]
     i = 1
     j = 0
@@ -153,6 +170,10 @@ def main_window():
                 lexictab(window,values,ctab)
             else:
                 lexicwindow(values,ctab)
+        if event == 'Sintax':
+            ctab = window['-tabs-'].get()
+            sintaxtab(window,values,ctab)
+
         # if event == 'why':
         #     ctab = window['-tabs-'].get()
         #     print(ctab)
