@@ -15,6 +15,7 @@ def sintax_analisis(expression):
             |ID ASSING expr 
             |expr (OP)* expr
             |expr (COMP)* expr
+            |"(" expr ")"
         IF: "if"
         OP: "+" | "-" | "*" | "/"
         ASSING: "="
