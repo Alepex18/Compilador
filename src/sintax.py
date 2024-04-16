@@ -37,4 +37,3 @@ def sintax_analisis(expression):
     tree = parser.parse(expression)
 
     return (tree,tree.pretty())
-print(sintax_analisis("if a > 2: b = 2*2 else c")[1])
