@@ -27,17 +27,20 @@ def sintaxtablayout():
    ]
 
 def sintaxtab(window,values,ctab):
-    if ctab is not None:
-        text_to_analyse = values[f'-multline{ctab}-']
-        print('pre sintax lenght:',len(text_to_analyse))
-        if len(text_to_analyse) != 0:
-            import re
-            str_without_lf = re.sub(r'\s', '',text_to_analyse)
-            from sintax import sintax_analisis
-            sintax_analised_text = sintax_analisis(str_without_lf)
-            window['-sintaxanalysis-'].update(sintax_analised_text[0])
-            window['-sintaxtree-'].update(sintax_analised_text[1])
-            window['-sintax-'].select()
+    try:
+        if ctab is not None:
+            text_to_analyse = values[f'-multline{ctab}-']
+            print('pre sintax lenght:',len(text_to_analyse))
+            if len(text_to_analyse) != 0:
+                text_to_analyse
+                from sintax import sintax_analisis
+                sintax_analised_text = sintax_analisis(text_to_analyse)
+                window['-sintaxanalysis-'].update(sintax_analised_text[0])
+                window['-sintaxtree-'].update(sintax_analised_text[1])
+                window['-sintax-'].select()
+    except Exception as error :
+        sg.Print(error)
+    
 
 def lexictab(window,values,ctab):
     if ctab is not None:
