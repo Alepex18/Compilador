@@ -3,18 +3,18 @@ from lark import Lark
 def sintax_analisis(expression):
     grammar = r"""
         start: expr
-        ?expr: IF expr COMP expr THEN expr ELSE expr
-            | FALSE
+        ?expr: IF expr COMP expr THEN "{" expr "}"  ELSE THEN "{" expr "}"  
+            |IF expr COMP expr THEN "{" expr "}" 
+            |WHILE expr COMP expr THEN "{" expr "}" 
             | STRING
-            | ID 
-            | WHILE
             | NUMBER
-            | TRUE
-            | FOR
-            | IF
+            | BOOL
+            | ID
             |ID ASSING expr 
+            |expr ASSING expr 
             |expr (OP)* expr
             |expr (COMP)* expr
+            |ID (COMP)* expr
             |"(" expr ")"
         IF: "if"
         OP: "+" | "-" | "*" | "/"|"^"
@@ -22,14 +22,12 @@ def sintax_analisis(expression):
         THEN: ":"
         COMP: "==" | "!=" | "<" | ">" | "<=" | ">="
         ELSE: "else"
-        FALSE: "false"
         STRING: /"[^"]*"/
         ID: /[a-zA-Z_]\w*/
         WHILE: "while"
         NUMBER: /\d+(\.\d+)?/ 
-        TRUE: "true"
-        FOR: "for"
-        %ignore " "
+        BOOL: "$true" | "$false"
+        %ignore " " | "\n"
     """
 
     parser = Lark(grammar)
