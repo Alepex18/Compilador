@@ -27,7 +27,7 @@ def sintax_analisis(expression):
         WHILE: "while"
         NUMBER: /\d+(\.\d+)?/ 
         BOOL: "$true" | "$false"
-        %ignore " " | "\n"
+        %ignore " " | "\n" | "\t"
     """
 
     parser = Lark(grammar)
