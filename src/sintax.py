@@ -17,7 +17,7 @@ def sintax_analisis(expression):
             |expr (COMP)* expr
             |"(" expr ")"
         IF: "if"
-        OP: "+" | "-" | "*" | "/"
+        OP: "+" | "-" | "*" | "/"|"^"
         ASSING: "="
         THEN: ":"
         COMP: "==" | "!=" | "<" | ">" | "<=" | ">="
