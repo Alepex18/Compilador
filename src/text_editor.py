@@ -36,7 +36,7 @@ def lexicwindow(values,ctab):
     if ctab is not None:
         sg.easy_print_close()
         text_to_analyse = values[f'-multline{ctab}-']
-        from utils.get_characters import get_characters
+        from get_character import get_characters
         lexic_analised_text = get_characters(text_to_analyse)
         string_numeros = f"Numeros:\nCantidad: {lexic_analised_text['numbers']['count']}\nLista: {lexic_analised_text['numbers']['list']}\n\n"
         string_letras = f"Letras:\nCantidad: {lexic_analised_text['letters']['count']}\nLista: {lexic_analised_text['letters']['list']}\n\n"
