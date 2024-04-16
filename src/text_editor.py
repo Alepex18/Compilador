@@ -29,11 +29,13 @@ def sintaxtablayout():
 def sintaxtab(window,values,ctab):
     if ctab is not None:
         text_to_analyse = values[f'-multline{ctab}-']
-        from sintax import sintax_analisis
-        sintax_analised_text = sintax_analisis(text_to_analyse)
-        window['-sintaxanalysis-'].update(sintax_analised_text[0])
-        window['-sintaxtree-'].update(sintax_analised_text[1])
-        window['-sintax-'].select()
+        print('pre sintax lenght:',len(text_to_analyse))
+        if len(text_to_analyse) is not 0:
+            from sintax import sintax_analisis
+            sintax_analised_text = sintax_analisis(text_to_analyse)
+            window['-sintaxanalysis-'].update(sintax_analised_text[0])
+            window['-sintaxtree-'].update(sintax_analised_text[1])
+            window['-sintax-'].select()
 
 def lexictab(window,values,ctab):
     if ctab is not None:
